@@ -19,6 +19,10 @@ interface CreCompanyData {
   childLaborFree: boolean;
   is_msme: boolean;
   recordYear: string;
+}
+//Post data interface
+interface PostData {
+  data: CreCompanyData;
   esg_report: any;
   child_labor_report: any;
 }
@@ -58,7 +62,7 @@ const initialState: State = {
 
 export const CreatCarbonAmetionDataAsync = createAsyncThunk(
   "Item/CreCompanyData",
-  async (data: CreCompanyData) => {
+  async (data: PostData) => {
     try {
       const response = await creatData(data);
       return response;

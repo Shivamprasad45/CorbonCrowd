@@ -32,6 +32,10 @@ interface CreCompanyData {
   childLaborFree: boolean;
   is_msme: boolean;
   recordYear: string;
+}
+
+interface Postdata {
+  data: CreCompanyData;
   esg_report: any;
   child_labor_report: any;
 }
@@ -49,7 +53,7 @@ interface CreCompanyData {
 //   });
 // }
 
-export function creatData(Data: CreCompanyData) {
+export function creatData(Data: Postdata) {
   console.log(Data, "Data  create data");
   return new Promise(async (resolve) => {
     const response = await fetch(`${BACKEND_URL}`, {

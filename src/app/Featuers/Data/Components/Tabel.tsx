@@ -113,7 +113,7 @@ const Tabel = () => {
   };
   useEffect(() => {
     dispatch(PageCarbonAmetionDataAsync({ offset: 1, limit: 10 }));
-  }, [dispatch]);
+  }, []);
   const EditLog = (company: CompanyData) => {
     setEditIndexData(company);
     setEdit(true);

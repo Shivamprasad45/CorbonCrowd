@@ -104,10 +104,10 @@ const EditTable = ({
     dispatch(UpdateCarbonAmetionDataAsync(rawFormData));
   };
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-xl mx-auto px-10 py-3 bg-white shadow-md rounded-md">
       <h2 className="text-xl font-semibold mb-4">Emission form Update</h2>
-      <div className="max-w-md mx-auto mt-8">
-        <form action={FormInVoice} className="space-y-4 ">
+      <div className="max-w-md mx-auto mt-3">
+        <form action={FormInVoice} className="space-y-2 ">
           <div className="flex justify-between">
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

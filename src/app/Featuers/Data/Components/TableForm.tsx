@@ -60,7 +60,7 @@ const CompanyForm = () => {
 
     // Revoke the previous object URL if it exists
   };
-  console.log(Esg, "Image handle");
+
   async function FormInVoice(formData: FormData) {
     let rawFormData = {
       // Convert to string and provide empty string as default
@@ -77,19 +77,22 @@ const CompanyForm = () => {
       recordYear: formData.get("recordYear"),
 
       is_msme: formData.get("is_msme") === "on", // For checkbox, check if it's "on"
+    };
+
+    const PostData = {
+      data: rawFormData,
       esg_report: Esg,
       child_labor_report: Childlabour,
     };
-
     console.log(rawFormData, "row");
-    dispatch(CreatCarbonAmetionDataAsync(rawFormData));
+    dispatch(CreatCarbonAmetionDataAsync(PostData));
   }
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-xl mx-auto px-10 py-3 bg-white shadow-md rounded-md">
       <h2 className="text-xl font-semibold mb-4">Emission form</h2>
-      <div className="max-w-md mx-auto mt-8">
-        <form action={FormInVoice} className="space-y-4">
+      <div className="max-w-md mx-auto mt-3">
+        <form action={FormInVoice} className="space-y-2">
           {/* Name and Sector */}
           <div className="flex justify-between">
             <div className="w-1/2">
@@ -316,7 +319,6 @@ const CompanyForm = () => {
                   onChange={EsghandleImage}
                   className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
                   type="file"
-                  accept=".pdf, .doc, .docx"
                 />
                 <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
                   <FaFilePdf className="h-6 w-6 mr-1 text-red-500" />
@@ -345,7 +347,6 @@ const CompanyForm = () => {
                   onChange={ChildhandleImage}
                   className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
                   type="file"
-                  accept=".pdf, .doc, .docx"
                 />
                 <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
                   <FaFileWord className="h-6 w-6 mr-1 text-blue-500" />
