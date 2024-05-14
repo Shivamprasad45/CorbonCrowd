@@ -1,5 +1,10 @@
 import React, { useState } from "react";
+import { FaFilePdf, FaFileWord } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { UpdateCarbonAmetionDataAsync } from "../DataSlice";
+
 interface CompanyData {
+  id: string;
   name: string;
   sector: string;
   country: string;
@@ -21,11 +26,14 @@ const EditTable = ({
 }: {
   EditTableDataValue: CompanyData;
 }) => {
+  const dispatch = useDispatch();
   const [Childlabour, setChildlabour] = useState<any>();
+  const [esgFile, setEsgFile] = useState<any>();
+  const [childFile, setChildFile] = useState<any>();
   const [Esg, setEsg] = useState<any>();
   const EsghandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
+    setEsgFile(file);
     // Set the image file
 
     if (file) {
@@ -50,7 +58,7 @@ const EditTable = ({
   ///Ecg handle Image
   const ChildhandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
+    setChildFile(file);
     // Set the image file
 
     if (file) {
@@ -75,6 +83,7 @@ const EditTable = ({
   const FormInVoice = (formData: FormData) => {
     let rawFormData = {
       // Convert to string and provide empty string as default
+      id: EditTableDataValue.id,
       name: formData.get("name") || "",
       sector: formData.get("sector") || "",
       country: formData.get("country"),
@@ -91,6 +100,8 @@ const EditTable = ({
       link_childlabour: Childlabour,
       esg: Esg,
     };
+
+    dispatch(UpdateCarbonAmetionDataAsync(rawFormData));
   };
   return (
     <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md">
@@ -106,7 +117,7 @@ const EditTable = ({
                 type="text"
                 id="first_name"
                 defaultValue={EditTableDataValue.name}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="TATA MOTERS"
                 required
                 name="name"
@@ -119,7 +130,7 @@ const EditTable = ({
               <input
                 type="text"
                 id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Sector"
                 required
                 name="sector"
@@ -136,7 +147,7 @@ const EditTable = ({
               <input
                 type="text"
                 id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Country"
                 required
                 name="country"
@@ -150,7 +161,7 @@ const EditTable = ({
               <input
                 type="text"
                 name="recordYear"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="yyyy"
                 defaultValue={EditTableDataValue.recordYear}
               />
@@ -159,7 +170,7 @@ const EditTable = ({
 
           {/* Add more input fields for other properties */}
           <section className="flex justify-between  space-x-2">
-            <div className="">
+            <div className="w-1/3">
               <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Scope 1
               </label>
@@ -168,14 +179,14 @@ const EditTable = ({
                 defaultValue={EditTableDataValue.scope1}
                 id="number-input"
                 aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Scope 1"
                 step="any"
                 name="scope1"
               />
             </div>
 
-            <div>
+            <div className="w-1/3">
               <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Scope 2
               </label>
@@ -184,13 +195,13 @@ const EditTable = ({
                 defaultValue={EditTableDataValue.scope2}
                 id="number-input"
                 aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Scope 2"
                 step="any"
                 name="scope2"
               />
             </div>
-            <div>
+            <div className="w-1/3">
               <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Scope 3
               </label>
@@ -199,7 +210,7 @@ const EditTable = ({
                 id="number-input"
                 defaultValue={EditTableDataValue.scope3}
                 aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Scope 3"
                 step="any"
                 name="scope3"
@@ -216,7 +227,7 @@ const EditTable = ({
                 type="number"
                 id="number-input"
                 aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="emission_intensity"
                 step="any"
                 name="emission_intensity"
@@ -230,7 +241,7 @@ const EditTable = ({
               <input
                 type="text"
                 id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Emission Intensity unit"
                 name="emission_intensity_unit"
                 defaultValue={EditTableDataValue.emission_intensity_unit}
@@ -244,7 +255,7 @@ const EditTable = ({
               <select
                 name="derived_by"
                 defaultValue={EditTableDataValue.emission_intensity_derived_by}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option value="Self require">Self require</option>
                 <option value="Verified">Verified</option>
@@ -254,25 +265,63 @@ const EditTable = ({
           {/* ??Image uploads */}
 
           <div className="flex justify-between items-center space-x-2">
-            <div className=" ">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Esg report
+            <div className="w-1/2">
+              <label
+                htmlFor="esg_report"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                ESG Report
               </label>
-              <input
-                onChange={EsghandleImage}
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                type="file"
-              />
+              <div className="relative">
+                <input
+                  id="esg_report"
+                  onChange={EsghandleImage}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                  type="file"
+                  accept=".pdf, .doc, .docx"
+                />
+                <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
+                  <FaFilePdf className="h-6 w-6 mr-1 text-red-500" />
+                  {esgFile ? (
+                    <span className="text-gray-900 dark:text-gray-300">
+                      {esgFile.name}
+                    </span>
+                  ) : (
+                    <span className="text-gray-900 dark:text-gray-300">
+                      Choose file
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className=" ">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Child report
+            <div className="w-1/2">
+              <label
+                htmlFor="child_report"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Child Report
               </label>
-              <input
-                onChange={ChildhandleImage}
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                type="file"
-              />
+              <div className="relative">
+                <input
+                  id="child_report"
+                  onChange={ChildhandleImage}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                  type="file"
+                  accept=".pdf, .doc, .docx"
+                />
+                <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
+                  <FaFileWord className="h-6 w-6 mr-1 text-blue-500" />
+                  {childFile ? (
+                    <span className="text-gray-900 dark:text-gray-300">
+                      {childFile.name}
+                    </span>
+                  ) : (
+                    <span className="text-gray-900 dark:text-gray-300">
+                      Choose file
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
           <div className="flex justify-between">

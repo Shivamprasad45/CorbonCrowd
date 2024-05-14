@@ -11,7 +11,7 @@ const SearchBar = () => {
   };
   return (
     <div>
-      <form className="max-w-md pt-6  mx-auto md:ml-[384px]  ">
+      <form className="max-w-md pt-6  mx-auto  ">
         <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
           Search
         </label>

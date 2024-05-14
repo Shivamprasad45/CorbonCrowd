@@ -2,15 +2,19 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { CreatCarbonAmetionDataAsync } from "../DataSlice";
+import { FaFilePdf, FaFileWord } from "react-icons/fa";
 
 const CompanyForm = () => {
   const dispatch = useDispatch();
   const [Childlabour, setChildlabour] = useState<any>();
+  const [esgFile, setEsgFile] = useState<any>();
+  const [childFile, setChildFile] = useState<any>();
   const [Esg, setEsg] = useState<any>();
   const EsghandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     // Set the image file
+    setEsgFile(file);
 
     if (file) {
       // Create a new FileReader instance
@@ -34,7 +38,7 @@ const CompanyForm = () => {
   ///Ecg handle Image
   const ChildhandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
+    setChildFile(file);
     // Set the image file
 
     if (file) {
@@ -73,221 +77,296 @@ const CompanyForm = () => {
       recordYear: formData.get("recordYear"),
 
       is_msme: formData.get("is_msme") === "on", // For checkbox, check if it's "on"
-    };
-
-    const Postdata = {
-      data: rawFormData,
       esg_report: Esg,
       child_labor_report: Childlabour,
     };
 
     console.log(rawFormData, "row");
-    dispatch(CreatCarbonAmetionDataAsync(Postdata));
+    dispatch(CreatCarbonAmetionDataAsync(rawFormData));
   }
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-xl font-semibold mb-4">Emission form</h2>
       <div className="max-w-md mx-auto mt-8">
-        <form action={FormInVoice} className="space-y-4 ">
+        <form action={FormInVoice} className="space-y-4">
+          {/* Name and Sector */}
           <div className="flex justify-between">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <div className="w-1/2">
+              <label
+                htmlFor="first_name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 Name
               </label>
               <input
                 type="text"
                 id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="TATA MOTERS"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="TATA MOTORS"
                 required
                 name="name"
               />
             </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <div className="w-1/2">
+              <label
+                htmlFor="sector"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 Sector
               </label>
               <input
                 type="text"
-                id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="sector"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Sector"
                 required
                 name="sector"
               />
             </div>
           </div>
-          {/* //County Recorders */}
+
+          {/* Country and Record Year */}
           <div className="flex justify-between">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <div className="w-1/2">
+              <label
+                htmlFor="country"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 Country
               </label>
               <input
                 type="text"
-                id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="country"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Country"
                 required
                 name="country"
               />
             </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Record year
+            <div className="w-1/2">
+              <label
+                htmlFor="record_year"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Record Year
               </label>
               <input
                 type="text"
-                name="recordYear"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="yyyy"
+                id="record_year"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="YYYY"
+                name="record_year"
               />
             </div>
           </div>
 
-          {/* Add more input fields for other properties */}
-          <section className="flex justify-between  space-x-2">
-            <div className="">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          {/* Scope 1, 2, 3 */}
+          <div className="flex justify-between">
+            <div className="w-1/3">
+              <label
+                htmlFor="scope_1"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 Scope 1
               </label>
               <input
                 type="number"
-                id="number-input"
-                aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="scope_1"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Scope 1"
                 step="any"
-                name="scope1"
+                name="scope_1"
               />
             </div>
-
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <div className="w-1/3">
+              <label
+                htmlFor="scope_2"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 Scope 2
               </label>
               <input
                 type="number"
-                id="number-input"
-                aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="scope_2"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Scope 2"
                 step="any"
-                name="scope2"
+                name="scope_2"
               />
             </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <div className="w-1/3">
+              <label
+                htmlFor="scope_3"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 Scope 3
               </label>
               <input
                 type="number"
-                id="number-input"
-                aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="scope_3"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Scope 3"
                 step="any"
-                name="scope3"
+                name="scope_3"
               />
             </div>
-          </section>
+          </div>
 
-          <div className="flex items-center justify-between space-x-2">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Emission Intensity{" "}
+          {/* Emission Intensity and Unit */}
+          <div className="flex justify-between">
+            <div className="w-1/2">
+              <label
+                htmlFor="emission_intensity"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Emission Intensity
               </label>
               <input
                 type="number"
-                id="number-input"
-                aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="emission_intensity"
+                id="emission_intensity"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Emission Intensity"
                 step="any"
                 name="emission_intensity"
               />
             </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <div className="w-1/2">
+              <label
+                htmlFor="emission_intensity_unit"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 Unit
               </label>
               <input
                 type="text"
-                id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="emission_intensity_unit"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Emission Intensity unit"
                 name="emission_intensity_unit"
               />
             </div>
-
-            <div className="w-fit">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Derived By
-              </label>
-              <select
-                name="derived_by"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option value="Self require">Self require</option>
-                <option value="Verified">Verified</option>
-              </select>
-            </div>
           </div>
-          {/* ??Image uploads */}
 
-          <div className="flex justify-between items-center space-x-2">
-            <div className=" ">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Esg report
-              </label>
-              <input
-                onChange={EsghandleImage}
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                type="file"
-              />
-            </div>
-            <div className=" ">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Child report
-              </label>
-              <input
-                onChange={ChildhandleImage}
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                type="file"
-              />
-            </div>
+          {/* Derived By */}
+          <div className="w-1/2">
+            <label
+              htmlFor="derived_by"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Derived By
+            </label>
+            <select
+              id="derived_by"
+              name="derived_by"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option value="Self require">Self require</option>
+              <option value="Verified">Verified</option>
+            </select>
           </div>
+
+          {/* Checkboxes */}
           <div className="flex justify-between">
             <div className="flex items-center">
               <input
-                id="default-checkbox"
+                id="child_labor_free"
                 type="checkbox"
                 defaultChecked
                 name="childLaborFree"
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
               />
-              <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Child labour free
+              <label
+                htmlFor="child_labor_free"
+                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Child labor free
               </label>
             </div>
             <div className="flex items-center">
               <input
-                id="default-checkbox"
+                id="is_msme"
                 type="checkbox"
                 defaultChecked
                 value=""
                 name="is_msme"
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
               />
-              <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <label
+                htmlFor="is_msme"
+                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
                 MSME
               </label>
             </div>
           </div>
+
+          {/* File Uploads */}
+          <div className="flex justify-between items-center space-x-2">
+            <div className="w-1/2">
+              <label
+                htmlFor="esg_report"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                ESG Report
+              </label>
+              <div className="relative">
+                <input
+                  id="esg_report"
+                  onChange={EsghandleImage}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                  type="file"
+                  accept=".pdf, .doc, .docx"
+                />
+                <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
+                  <FaFilePdf className="h-6 w-6 mr-1 text-red-500" />
+                  {esgFile ? (
+                    <span className="text-gray-900 dark:text-gray-300">
+                      {esgFile.name}
+                    </span>
+                  ) : (
+                    <span className="text-gray-900 dark:text-gray-300">
+                      Choose file
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="w-1/2">
+              <label
+                htmlFor="child_report"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Child Report
+              </label>
+              <div className="relative">
+                <input
+                  id="child_report"
+                  onChange={ChildhandleImage}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                  type="file"
+                  accept=".pdf, .doc, .docx"
+                />
+                <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
+                  <FaFileWord className="h-6 w-6 mr-1 text-blue-500" />
+                  {childFile ? (
+                    <span className="text-gray-900 dark:text-gray-300">
+                      {childFile.name}
+                    </span>
+                  ) : (
+                    <span className="text-gray-900 dark:text-gray-300">
+                      Choose file
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Submit
           </button>

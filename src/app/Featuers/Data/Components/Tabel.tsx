@@ -7,7 +7,6 @@ import {
   ItemSelector,
   PageCarbonAmetionDataAsync,
   SortActios,
-  fetchCarbonAmetionDataAsync,
 } from "../DataSlice";
 import CompanyForm from "./TableForm";
 import SearchBar from "./SearchBar";
@@ -19,7 +18,6 @@ import { BiPlus } from "react-icons/bi";
 import EditTable from "./EditTable";
 import { IoCaretDown, IoCaretUpSharp, IoCloseSharp } from "react-icons/io5";
 import { IoIosImage } from "react-icons/io";
-import { PageNationCarbonAmetionDataApi } from "../DataAPI";
 
 const Tabel = () => {
   interface CompanyData {
@@ -35,8 +33,8 @@ const Tabel = () => {
     childLaborFree: boolean;
     is_msme: boolean;
     recordYear: string;
-    link_childlabour: string;
-    esg: string;
+    link_childlabour: any;
+    esg: any;
   }
   interface sortInter {
     field: string;

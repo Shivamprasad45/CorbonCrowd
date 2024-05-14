@@ -4,8 +4,24 @@ import {
   SearchCarbonAmetionDataApi,
   UpdateData,
   creatData,
-  fetchCarbonAmetionDataApi,
 } from "./DataAPI";
+
+interface CreCompanyData {
+  name: string;
+  sector: string;
+  country: string;
+  scope1: number;
+  scope2: number;
+  scope3: number;
+  emission_intensity: number;
+  emission_intensity_unit: string;
+  emission_intensity_derived_by: string;
+  childLaborFree: boolean;
+  is_msme: boolean;
+  recordYear: string;
+  esg_report: any;
+  child_labor_report: any;
+}
 
 interface CompanyData {
   id: string;
@@ -21,19 +37,15 @@ interface CompanyData {
   childLaborFree: boolean;
   is_msme: boolean;
   recordYear: string;
+  esg_report: any;
+  child_labor_report: any;
 }
 
 interface State {
-  CarbonAmetion: PostDataInter[];
+  CarbonAmetion: CompanyData[];
 
   status: "idle" | "loading" | "succeeded" | "failed";
   error?: string;
-}
-
-interface PostDataInter {
-  data: CompanyData;
-  esg_report: any;
-  child_labor_report: any;
 }
 
 const initialState: State = {
@@ -42,24 +54,11 @@ const initialState: State = {
   status: "idle",
 };
 
-export const fetchCarbonAmetionDataAsync = createAsyncThunk(
-  "Item/fetchCarbonAretinoDataApi",
-  async () => {
-    try {
-      const response = await fetchCarbonAmetionDataApi();
-      return response;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-);
-
 //Craete data
 
 export const CreatCarbonAmetionDataAsync = createAsyncThunk(
-  "Item/creatData",
-  async (data: PostDataInter) => {
+  "Item/CreCompanyData",
+  async (data: CreCompanyData) => {
     try {
       const response = await creatData(data);
       return response;
@@ -73,7 +72,7 @@ export const CreatCarbonAmetionDataAsync = createAsyncThunk(
 // Update data
 export const UpdateCarbonAmetionDataAsync = createAsyncThunk(
   "Item/UpdateData",
-  async (data) => {
+  async (data: CompanyData) => {
     try {
       const response = await UpdateData(data);
       return response;
@@ -122,20 +121,7 @@ const ItemSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCarbonAmetionDataAsync.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(
-        fetchCarbonAmetionDataAsync.fulfilled,
-        (state, action: PayloadAction<CompanyData[]>) => {
-          state.CarbonAmetion = action.payload;
-          state.status = "succeeded";
-        }
-      )
-      .addCase(fetchCarbonAmetionDataAsync.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
+
       .addCase(CreatCarbonAmetionDataAsync.pending, (state) => {
         state.status = "loading";
       })
@@ -155,7 +141,15 @@ const ItemSlice = createSlice({
       })
       .addCase(
         UpdateCarbonAmetionDataAsync.fulfilled,
-        (state, action: PayloadAction<CompanyData>) => {}
+        (state, action: PayloadAction<CompanyData>) => {
+          const NewData = [...state.CarbonAmetion];
+          const Index: number = NewData.findIndex(
+            (item) => item.id === action.payload.id
+          );
+
+          NewData[Index] = action.payload;
+          state.CarbonAmetion = NewData;
+        }
       )
       .addCase(SearchCarbonAmetionDataAsync.pending, (state) => {
         state.status = "loading";
@@ -170,7 +164,7 @@ const ItemSlice = createSlice({
       .addCase(
         PageCarbonAmetionDataAsync.fulfilled,
         (state, action: PayloadAction<CompanyData[]>) => {
-          state.CarbonAmetion = action.payload.data;
+          state.CarbonAmetion = action.payload;
         }
       );
   },
