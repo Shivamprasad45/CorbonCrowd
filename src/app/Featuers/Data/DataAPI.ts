@@ -40,26 +40,56 @@ interface Postdata {
   child_labor_report: any;
 }
 
-// export async function fetchCarbonAmetionDataApi(): Promise<CompanyData[]> {
-//   return new Promise<CompanyData[]>(async (resolve, reject) => {
-//     try {
-//       const response = await fetch(`${BACKEND_URL}`);
-//       const data = await response.json();
-//       console.log(data, "data");
-//       resolve(data);
-//     } catch (error) {
-//       reject(error);
-//     }
-//   });
-// }
+const postData: Postdata = {
+  data: {
+    name: "Company Name",
+    sector: "Sector",
+    country: "Country",
+    scope1: 100,
+    scope2: 200,
+    scope3: 300,
+    emission_intensity: 10,
+    emission_intensity_unit: "Unit",
+    emission_intensity_derived_by: "Derived By",
+    childLaborFree: true,
+    is_msme: false,
+    recordYear: "2022",
+  },
+  esg_report: null,
+  child_labor_report: null,
+};
 
-export function creatData(Data: Postdata) {
-  console.log(Data, "Data  create data");
+createData(postData)
+  .then((response) => {
+    console.log("Response:", response);
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+
+export function createData(Data: Postdata) {
+  const formData = new FormData();
+  formData.append("data", JSON.stringify(Data.data));
+
+  // Convert ArrayBuffer to Blob for child_labor_report if it exists
+  if (Data.child_labor_report) {
+    const childLaborReportBlob = new Blob([Data.child_labor_report]);
+    formData.append("child_labor_report", childLaborReportBlob);
+  }
+
+  // Convert ArrayBuffer to Blob for esg_report if it exists
+  if (Data.esg_report) {
+    const esgReportBlob = new Blob([Data.esg_report]);
+    formData.append("esg_report", esgReportBlob);
+  }
+
+  console.log(formData, "Formdata");
+
   return new Promise(async (resolve) => {
-    const response = await fetch(`${BACKEND_URL}`, {
+    const response = await fetch("http://localhost:8000/carbondata", {
       method: "POST",
-      body: JSON.stringify(Data),
-      headers: { "content-type": "application/json" },
+      body: formData,
+      // No need to set content-type header, it will be automatically set for FormData
     });
     const data = await response.json();
     resolve(data);

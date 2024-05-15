@@ -3,7 +3,7 @@ import {
   PageNationCarbonAmetionDataApi,
   SearchCarbonAmetionDataApi,
   UpdateData,
-  creatData,
+  createData,
 } from "./DataAPI";
 
 interface CreCompanyData {
@@ -64,7 +64,7 @@ export const CreatCarbonAmetionDataAsync = createAsyncThunk(
   "Item/CreCompanyData",
   async (data: PostData) => {
     try {
-      const response = await creatData(data);
+      const response = await createData(data);
       return response;
     } catch (error) {
       console.error(error);

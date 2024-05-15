@@ -84,7 +84,7 @@ const CompanyForm = () => {
       esg_report: Esg,
       child_labor_report: Childlabour,
     };
-    console.log(rawFormData, "row");
+    console.log(PostData, "row");
     dispatch(CreatCarbonAmetionDataAsync(PostData));
   }
 
