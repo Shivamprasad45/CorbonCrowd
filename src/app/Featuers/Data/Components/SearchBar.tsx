@@ -11,9 +11,9 @@ const SearchBar = () => {
     dispatch(SearchCarbonAmetionDataAsync(data));
   };
   return (
-    <MaxWidthRappers className="items-start flex justify-start  ">
-      <div className="mx-auto  w-full max-w-screen-xl px-2.5 md:px-20 ">
-        <form className="ml-1 xs:ml-2 sm:ml-4 md:ml-7 pt-6 pl-6  max-w-sm  ">
+    <MaxWidthRappers className="items-start flex justify-start   ">
+      <div className="mx-auto  w-full  items-start ">
+        <form className="  pt-6   max-w-sm  ">
           <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
             Search
           </label>

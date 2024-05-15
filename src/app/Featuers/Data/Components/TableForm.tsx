@@ -70,8 +70,8 @@ const CompanyForm = () => {
       scope1: Number(formData.get("scope1")) || 0, // Convert to number and provide 0 as default
       scope2: Number(formData.get("scope2")) || 0, // Convert to number and provide 0 as default
       scope3: Number(formData.get("scope3")) || 0, // Convert to number and provide 0 as default
-      emission_intensity: formData.get("emission_intensity"),
-      emission_intensity_unit: formData.get("emission_intensity_unit") || "",
+      emission_intensity: Number(formData.get("emission_intensity")),
+      emission_intensity_unit: formData.get("emission_intensity_unit") || null,
       emission_intensity_derived_by: formData.get("derived_by") || "",
       childLaborFree: formData.get("childLaborFree") || "",
       recordYear: formData.get("recordYear"),
@@ -81,8 +81,8 @@ const CompanyForm = () => {
 
     const PostData = {
       data: rawFormData,
-      esg_report: Esg,
-      child_labor_report: Childlabour,
+      esg_report: Esg || null,
+      child_labor_report: Childlabour || null,
     };
     console.log(PostData, "row");
     dispatch(CreatCarbonAmetionDataAsync(PostData));

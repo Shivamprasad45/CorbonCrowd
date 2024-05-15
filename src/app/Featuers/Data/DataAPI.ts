@@ -85,14 +85,18 @@ export function createData(Data: Postdata) {
 
   console.log(formData, "Formdata");
 
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8000/carbondata", {
-      method: "POST",
-      body: formData,
-      // No need to set content-type header, it will be automatically set for FormData
-    });
-    const data = await response.json();
-    resolve(data);
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch("http://localhost:8000/carbondata", {
+        method: "POST",
+        body: formData,
+        // No need to set content-type header, it will be automatically set for FormData
+      });
+      const data = await response.json();
+      resolve(data);
+    } catch (error) {
+      console.log(error);
+    }
   });
 }
 
@@ -114,9 +118,7 @@ export async function SearchCarbonAmetionDataApi(
 ): Promise<CompanyData[]> {
   return new Promise<CompanyData[]>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${BACKEND_URL}/search?query=${companyname}`
-      );
+      const response = await fetch(`${BACKEND_URL}/search?name=${companyname}`);
       const data = await response.json();
       resolve(data);
     } catch (error) {

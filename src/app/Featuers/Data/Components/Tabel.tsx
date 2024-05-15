@@ -123,8 +123,9 @@ const Tabel = () => {
   return (
     <>
       <Navbar />
-      <SearchBar />
-      <MaxWidthRappers className="flex justify-center text-center pb-3 items-center  ">
+
+      <MaxWidthRappers className="flex flex-col justify-center text-center pb-3 items-center   ">
+        <SearchBar />
         <table className="border border-gray-300 shadow-lg rounded-lg relative">
           <thead>
             {Show && (
