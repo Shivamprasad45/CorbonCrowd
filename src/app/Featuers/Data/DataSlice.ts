@@ -25,6 +25,8 @@ interface PostData {
   data: CreCompanyData;
   esg_report: any;
   child_labor_report: any;
+  child_labor_File: any;
+  esg_File: any;
 }
 
 interface CompanyData {

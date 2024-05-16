@@ -64,17 +64,17 @@ const CompanyForm = () => {
   async function FormInVoice(formData: FormData) {
     let rawFormData = {
       // Convert to string and provide empty string as default
-      name: formData.get("name") || "",
-      sector: formData.get("sector") || "",
-      country: formData.get("country"),
+      name: formData.get("name"),
+      sector: formData.get("sector"),
+      country: formData.get("country") || "",
       scope1: Number(formData.get("scope1")) || 0, // Convert to number and provide 0 as default
       scope2: Number(formData.get("scope2")) || 0, // Convert to number and provide 0 as default
       scope3: Number(formData.get("scope3")) || 0, // Convert to number and provide 0 as default
-      emission_intensity: Number(formData.get("emission_intensity")),
-      emission_intensity_unit: formData.get("emission_intensity_unit") || null,
+      emission_intensity: formData.get("emission_intensity") || 0,
+      emission_intensity_unit: formData.get("emission_intensity_unit") || "",
       emission_intensity_derived_by: formData.get("derived_by") || "",
-      childLaborFree: formData.get("childLaborFree") || "",
-      recordYear: formData.get("recordYear"),
+      childLaborFree: formData.get("childLaborFree") === "on",
+      recordYear: formData.get("recordYear") || 2023,
 
       is_msme: formData.get("is_msme") === "on", // For checkbox, check if it's "on"
     };
@@ -83,8 +83,10 @@ const CompanyForm = () => {
       data: rawFormData,
       esg_report: Esg || null,
       child_labor_report: Childlabour || null,
+      child_labor_File: childFile,
+      esg_File: esgFile,
     };
-    console.log(PostData, "row");
+
     dispatch(CreatCarbonAmetionDataAsync(PostData));
   }
 

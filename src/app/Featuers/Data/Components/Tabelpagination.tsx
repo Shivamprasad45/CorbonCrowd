@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { PageCarbonAmetionDataAsync } from "../DataSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { ItemSelector, PageCarbonAmetionDataAsync } from "../DataSlice";
 
 const Tabelpagination = () => {
   const dispatch = useDispatch();
+
+  const DataTabel = useSelector(ItemSelector);
   const limit = 10;
 
   const [page, setPage] = useState<number>(0);
@@ -56,7 +58,7 @@ const Tabelpagination = () => {
           <button
             className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             onClick={NextPaginationLog}
-            disabled={endRange >= 100} // Disable next button on last page
+            disabled={DataTabel.length < 10} // Disable next button on last page
           >
             Next
           </button>

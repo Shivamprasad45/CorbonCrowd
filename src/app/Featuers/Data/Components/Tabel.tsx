@@ -155,6 +155,13 @@ const Tabel = () => {
             )}
             {ShowImage && (
               <div className="absolute flex w-full h-full justify-center items-center bg-opacity-75 backdrop-blur-lg">
+                <Image
+                  src={ImageUrl}
+                  alt="In"
+                  width={1000}
+                  height={1000}
+                  className="absolute"
+                />
                 <button
                   className="bg-blue-300  text-white font-bold py-2 px-4 rounded-full absolute left-[920px] top-72 cursor-pointer"
                   onClick={() => {
@@ -163,13 +170,6 @@ const Tabel = () => {
                 >
                   <IoCloseSharp color="black" />
                 </button>
-                <Image
-                  src={ImageUrl}
-                  alt="In"
-                  width={1000}
-                  height={1000}
-                  className="absolute"
-                />
               </div>
             )}
             <tr className="bg-gray-200 md:text-sm text-xs  space-x-4">

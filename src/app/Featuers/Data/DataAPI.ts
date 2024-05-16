@@ -38,35 +38,10 @@ interface Postdata {
   data: CreCompanyData;
   esg_report: any;
   child_labor_report: any;
+  child_labor_File: any;
+  esg_File: any;
 }
-
-const postData: Postdata = {
-  data: {
-    name: "Company Name",
-    sector: "Sector",
-    country: "Country",
-    scope1: 100,
-    scope2: 200,
-    scope3: 300,
-    emission_intensity: 10,
-    emission_intensity_unit: "Unit",
-    emission_intensity_derived_by: "Derived By",
-    childLaborFree: true,
-    is_msme: false,
-    recordYear: "2022",
-  },
-  esg_report: null,
-  child_labor_report: null,
-};
-
-createData(postData)
-  .then((response) => {
-    console.log("Response:", response);
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
-
+//Create
 export function createData(Data: Postdata) {
   const formData = new FormData();
   formData.append("data", JSON.stringify(Data.data));
@@ -74,16 +49,18 @@ export function createData(Data: Postdata) {
   // Convert ArrayBuffer to Blob for child_labor_report if it exists
   if (Data.child_labor_report) {
     const childLaborReportBlob = new Blob([Data.child_labor_report]);
-    formData.append("child_labor_report", childLaborReportBlob);
+    formData.append(
+      "child_labor_report",
+      childLaborReportBlob,
+      Data.child_labor_File
+    );
   }
 
   // Convert ArrayBuffer to Blob for esg_report if it exists
   if (Data.esg_report) {
     const esgReportBlob = new Blob([Data.esg_report]);
-    formData.append("esg_report", esgReportBlob);
+    formData.append("esg_report", esgReportBlob, Data.esg_File);
   }
-
-  console.log(formData, "Formdata");
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -99,10 +76,10 @@ export function createData(Data: Postdata) {
     }
   });
 }
-
+//Update
 export function UpdateData(Data: CompanyData): Promise<CompanyData[]> {
   return new Promise(async (resolve) => {
-    const response = await fetch(`${BACKEND_URL}/${Data.id}`, {
+    const response = await fetch(`${BACKEND_URL}?id=${Data.id}`, {
       method: "POST",
       body: JSON.stringify(Data),
       headers: { "content-type": "application/json" },
@@ -112,13 +89,13 @@ export function UpdateData(Data: CompanyData): Promise<CompanyData[]> {
     resolve(data);
   });
 }
-
+//Search
 export async function SearchCarbonAmetionDataApi(
   companyname: string
 ): Promise<CompanyData[]> {
   return new Promise<CompanyData[]>(async (resolve, reject) => {
     try {
-      const response = await fetch(`${BACKEND_URL}/search?name=${companyname}`);
+      const response = await fetch(`${BACKEND_URL}?name=${companyname}`);
       const data = await response.json();
       resolve(data);
     } catch (error) {
@@ -127,21 +104,7 @@ export async function SearchCarbonAmetionDataApi(
   });
 }
 
-// export async function SortCarbonAmetionDataApi(
-//   data: Sort
-// ): Promise<CompanyData[]> {
-//   return new Promise<CompanyData[]>(async (resolve, reject) => {
-//     try {
-//       const response = await fetch(
-//         `http://localhost:3000/CarbonAgnationData?field=${data.field}&Order=${data.method}`
-//       );
-//       const Data = await response.json();
-//       resolve(Data);
-//     } catch (error) {
-//       reject(error);
-//     }
-//   });
-// }
+// Pagination
 
 export async function PageNationCarbonAmetionDataApi(page: {
   offset: number;
@@ -150,7 +113,7 @@ export async function PageNationCarbonAmetionDataApi(page: {
   return new Promise<CompanyData[]>(async (resolve, reject) => {
     try {
       const limit = page["limit"];
-      const offset = (page["offset"] - 1) * limit;
+      const offset = page["offset"] * limit;
       const response = await fetch(
         `http://localhost:8000/carbondata/page/?limit=${limit}&offset=${offset}`
       );
