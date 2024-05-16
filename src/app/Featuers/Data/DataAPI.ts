@@ -44,22 +44,21 @@ interface Postdata {
 //Create
 export function createData(Data: Postdata) {
   const formData = new FormData();
+
   formData.append("data", JSON.stringify(Data.data));
 
   // Convert ArrayBuffer to Blob for child_labor_report if it exists
   if (Data.child_labor_report) {
     const childLaborReportBlob = new Blob([Data.child_labor_report]);
-    formData.append(
-      "child_labor_report",
-      childLaborReportBlob,
-      Data.child_labor_File
-    );
+    formData.append("child_labor_report", childLaborReportBlob);
+    formData.append("child_labor_File", Data.child_labor_File.name);
   }
 
   // Convert ArrayBuffer to Blob for esg_report if it exists
   if (Data.esg_report) {
     const esgReportBlob = new Blob([Data.esg_report]);
-    formData.append("esg_report", esgReportBlob, Data.esg_File);
+    formData.append("esg_report", esgReportBlob);
+    formData.append("esg_File", Data.esg_File.name);
   }
 
   return new Promise(async (resolve, reject) => {

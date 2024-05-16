@@ -11,7 +11,7 @@ const SearchBar = () => {
     dispatch(SearchCarbonAmetionDataAsync(data));
   };
   return (
-    <div className="  ml-0 sm:-ml-0  lg:ml-10 xl:ml-40  w-full  items-start ">
+    <div className="   sm:-ml-0  lg:ml-10 xl:ml-40  w-full  items-start ">
       <form className="  pt-6   max-w-sm  ">
         <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
           Search

@@ -38,6 +38,7 @@ const CompanyForm = () => {
   ///Ecg handle Image
   const ChildhandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log(file);
     setChildFile(file);
     // Set the image file
 
@@ -86,7 +87,7 @@ const CompanyForm = () => {
       child_labor_File: childFile,
       esg_File: esgFile,
     };
-
+    console.log(PostData, "Postdata");
     dispatch(CreatCarbonAmetionDataAsync(PostData));
   }
 
