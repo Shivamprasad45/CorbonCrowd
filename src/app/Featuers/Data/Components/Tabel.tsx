@@ -163,12 +163,12 @@ const Tabel = () => {
                   className="absolute"
                 />
                 <button
-                  className="bg-blue-300  text-white font-bold py-2 px-4 rounded-full absolute left-[920px] top-72 cursor-pointer"
+                  className=" py-2 px-4  absolute top-0 cursor-pointer hover:bg-yellow-50 bg-black text-white hover:text-black font-bold p-2 rounded-full "
                   onClick={() => {
                     setShowImage(false);
                   }}
                 >
-                  <IoCloseSharp color="black" />
+                  <IoCloseSharp className="hover:text-black text-white" />
                 </button>
               </div>
             )}
