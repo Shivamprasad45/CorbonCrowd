@@ -14,10 +14,12 @@ import Image from "next/image";
 import Tabelpagination from "./Tabelpagination";
 
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { BiPlus } from "react-icons/bi";
+
 import EditTable from "./EditTable";
 import { IoCaretDown, IoCaretUpSharp, IoCloseSharp } from "react-icons/io5";
 import { IoIosImage } from "react-icons/io";
+import Drawers from "@/app/components/Drawer";
+import { DrawerDialogDemo } from "@/app/components/EditDrawer";
 
 const Tabel = () => {
   interface CompanyData {
@@ -124,7 +126,7 @@ const Tabel = () => {
     <>
       <Navbar />
 
-      <MaxWidthRappers className="flex flex-col justify-center text-center pb-3 items-center   ">
+      <MaxWidthRappers className="flex flex-col  text-center justify-center  pb-3  overflow-scroll  ">
         <SearchBar />
         <table className="border border-gray-300 shadow-lg rounded-lg relative">
           <thead>
@@ -150,7 +152,7 @@ const Tabel = () => {
                 >
                   <IoCloseSharp color="black" />
                 </button>
-                <EditTable EditTableDataValue={EditIndexData} />
+                {/* <EditTable /> */}
               </div>
             )}
             {ShowImage && (
@@ -265,12 +267,14 @@ const Tabel = () => {
               <th className="px-1 py-2 md:px-4 md:py-2">Country</th>
 
               <th className="px-1 py-2 md:px-4 md:py-2">
-                Child <span>laborfree</span>{" "}
+                Emission intensity <span> unit</span>{" "}
               </th>
-              <th className="px-1 py-2 md:px-4 md:py-2">MSME</th>
               <th className="px-1 py-2 md:px-4 md:py-2">
-                Record <span>year</span>{" "}
+                Emission <span>intensity</span>
               </th>
+              {/* <th className="px-1 py-2 md:px-4 md:py-2">
+                Record <span>year</span>{" "}
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -310,14 +314,14 @@ const Tabel = () => {
                     </td>
 
                     <td className="px-0 py-2 md:px-4 md:py-2 text-xs md:text-sm">
-                      {company.childLaborFree ? "Yes" : "No"}
+                      {company.emission_intensity_unit}
                     </td>
                     <td className="px-0 py-2 md:px-4 md:py-2 text-xs md:text-sm">
-                      {company.is_msme ? "Yes" : "No"}
+                      {company.emission_intensity}
                     </td>
-                    <td className="px-0 py-2 md:px-4 md:py-2 text-xs md:text-sm">
+                    {/* <td className="px-0 py-2 md:px-4 md:py-2 text-xs md:text-sm">
                       {company.recordYear === "" ? 2023 : company.recordYear}
-                    </td>
+                    </td> */}
                   </tr>
                   {Open === Index && (
                     <td
@@ -327,14 +331,12 @@ const Tabel = () => {
                       <MaxWidthRappers className="w-full space-y-3 ">
                         <main className="flex  justify-between  items-center w-full ">
                           <div className="text-center w-20 m-2">
-                            <h1 className="font-bold">
-                              Emission intensity unit
-                            </h1>
-                            <p>{company.emission_intensity_unit}</p>
+                            <h1 className="font-bold">childLaborFree</h1>
+                            <p> {company.childLaborFree ? "Yes" : "No"}</p>
                           </div>
                           <div className="text-center w-20 m-2">
-                            <h1 className="font-bold">Emission intensity</h1>
-                            <p>{company.emission_intensity}</p>
+                            <h1 className="font-bold">MSME</h1>
+                            <p>{company.is_msme ? "yes" : "no"}</p>
                           </div>{" "}
                           <div className="text-center w-20 m-2">
                             <h1 className="font-bold">Drivideby</h1>
@@ -371,12 +373,7 @@ const Tabel = () => {
                             </h1>
                           </div>{" "}
                           <div className="w-20 m-2">
-                            <button
-                              className="bg-black text-white font-bold py-2 px-4 rounded-full"
-                              onClick={() => EditLog(company)}
-                            >
-                              Dispute
-                            </button>
+                            <DrawerDialogDemo EditTableDataValue={company} />
                           </div>
                         </main>
                       </MaxWidthRappers>
@@ -386,16 +383,12 @@ const Tabel = () => {
               ))}
           </tbody>
         </table>
-      </MaxWidthRappers>
-      <MaxWidthRappers className="flex justify-between items-center ">
-        <Tabelpagination />
-        <button
-          className="bg-black text-white font-bold p-2 md:p-3 rounded-full  flex text-center items-center  pb-4 "
-          onClick={() => setShow(true)}
-        >
-          {" "}
-          <BiPlus size={50} />
-        </button>
+
+        <div className=" flex justify-between pt-2 md:pt-4  items-center">
+          <Tabelpagination />
+
+          <Drawers />
+        </div>
       </MaxWidthRappers>
     </>
   );

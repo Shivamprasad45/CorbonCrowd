@@ -56,11 +56,10 @@ interface State {
 
 const initialState: State = {
   CarbonAmetion: [],
-
   status: "idle",
 };
 
-//Craete data
+//Create data
 
 export const CreatCarbonAmetionDataAsync = createAsyncThunk(
   "Item/CreCompanyData",
@@ -166,13 +165,21 @@ const ItemSlice = createSlice({
           state.CarbonAmetion = action.payload;
         }
       )
+      .addCase(PageCarbonAmetionDataAsync.pending, (state) => {
+        state.status = "loading";
+      })
 
       .addCase(
         PageCarbonAmetionDataAsync.fulfilled,
         (state, action: PayloadAction<CompanyData[]>) => {
           state.CarbonAmetion = action.payload;
+          state.error = " ";
         }
-      );
+      )
+      .addCase(PageCarbonAmetionDataAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -181,5 +188,7 @@ export default ItemSlice.reducer;
 // Simple ItemSelector without createSelector
 export const ItemSelector = (state: { ItemReduce: State }) =>
   state.ItemReduce.CarbonAmetion;
+export const ItemError = (state: { ItemReduce: State }) =>
+  state.ItemReduce.error;
 
 export const { SortActios } = ItemSlice.actions;

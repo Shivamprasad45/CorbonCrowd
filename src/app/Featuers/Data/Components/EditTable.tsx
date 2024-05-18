@@ -1,31 +1,53 @@
+"use client";
 import React, { useState } from "react";
-import { FaFilePdf, FaFileWord } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { UpdateCarbonAmetionDataAsync } from "../DataSlice";
+import { CreatCarbonAmetionDataAsync } from "../DataSlice";
+import { FaFilePdf, FaFileWord } from "react-icons/fa";
 
-interface CompanyData {
-  id: string;
-  name: string;
-  sector: string;
-  country: string;
-  scope1: number;
-  scope2: number;
-  scope3: number;
-  emission_intensity: number;
-  emission_intensity_unit: string;
-  emission_intensity_derived_by: string;
-  childLaborFree: boolean;
-  is_msme: boolean;
-  recordYear: string;
-  link_childlabour: string;
-  esg: string;
-}
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-const EditTable = ({
-  EditTableDataValue,
-}: {
-  EditTableDataValue: CompanyData;
-}) => {
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+
+const formSchema = z.object({
+  id: z.number(),
+  name: z.string().min(2).max(50),
+  sector: z.string().nonempty(),
+  country: z.string().nonempty(),
+  scope1: z.number(),
+  scope2: z.number().min(0).max(8).optional(),
+  scope3: z.number().min(0).max(8).optional(),
+  recordYear: z.string().min(4).max(4).optional(),
+  emission_intensity_unit: z.string().optional(),
+  emission_intensity: z.number().optional(),
+  emission_intensity_derived_by: z.string().optional(),
+  Esg: z.any().optional(),
+  Childlobour: z.any().optional(),
+  childLaborFree: z.boolean().optional().default(false),
+  is_msme: z.boolean().optional().default(false),
+});
+const Edittable = (EditTableDataValue: z.infer<typeof formSchema>) => {
+  const Val = EditTableDataValue["EditTableDataValue"];
+
   const dispatch = useDispatch();
   const [Childlabour, setChildlabour] = useState<any>();
   const [esgFile, setEsgFile] = useState<any>();
@@ -33,8 +55,9 @@ const EditTable = ({
   const [Esg, setEsg] = useState<any>();
   const EsghandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setEsgFile(file);
+
     // Set the image file
+    setEsgFile(file);
 
     if (file) {
       // Create a new FileReader instance
@@ -58,6 +81,7 @@ const EditTable = ({
   ///Ecg handle Image
   const ChildhandleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log(file);
     setChildFile(file);
     // Set the image file
 
@@ -80,287 +104,293 @@ const EditTable = ({
 
     // Revoke the previous object URL if it exists
   };
-  const FormInVoice = (formData: FormData) => {
-    let rawFormData = {
-      // Convert to string and provide empty string as default
-      id: EditTableDataValue.id,
-      name: formData.get("name") || "",
-      sector: formData.get("sector") || "",
-      country: formData.get("country"),
-      scope1: Number(formData.get("scope1")) || 0, // Convert to number and provide 0 as default
-      scope2: Number(formData.get("scope2")) || 0, // Convert to number and provide 0 as default
-      scope3: Number(formData.get("scope3")) || 0, // Convert to number and provide 0 as default
-      emission_intensity: formData.get("emission_intensity"),
-      emission_intensity_unit: formData.get("emission_intensity_unit") || "",
-      emission_intensity_derived_by: formData.get("derived_by") || "",
-      childLaborFree: formData.get("childLaborFree") || "",
-      recordYear: formData.get("recordYear"),
 
-      is_msme: formData.get("is_msme") === "on", // For checkbox, check if it's "on"
-      link_childlabour: Childlabour,
-      esg: Esg,
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: Val.name,
+      sector: Val.sector,
+      country: Val.country,
+      recordYear: Val.recordYear,
+      Childlobour: null,
+      Esg: null,
+      childLaborFree: Val.childLaborFree,
+      emission_intensity_derived_by: Val.emission_intensity_derived_by,
+      scope1: Val.scope1,
+      scope2: Val.scope2,
+      scope3: Val.scope3,
+      emission_intensity: Val.emission_intensity,
+      is_msme: Val.is_msme,
+      emission_intensity_unit: Val.emission_intensity_unit,
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    delete values["Childlobour"];
+    delete values["Esg"];
+    console.log(values);
+    const PostData = {
+      data: values,
+      esg_report: Esg || null,
+      child_labor_report: Childlabour || null,
+      child_labor_File: childFile,
+      esg_File: esgFile,
     };
 
-    dispatch(UpdateCarbonAmetionDataAsync(rawFormData));
-  };
+    // dispatch(CreatCarbonAmetionDataAsync(PostData));
+  }
+
   return (
-    <div className="max-w-xl mx-auto px-10 py-3 bg-white shadow-md rounded-md">
-      <h2 className="text-xl font-semibold mb-4">Emission form Update</h2>
-      <div className="max-w-md mx-auto mt-3">
-        <form action={FormInVoice} className="space-y-2 ">
-          <div className="flex justify-between">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Name
-              </label>
-              <input
-                type="text"
-                id="first_name"
-                defaultValue={EditTableDataValue.name}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="TATA MOTERS"
-                required
+    <>
+      <section className="max-w-screen-2xl w-full ">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="flex space-x-2">
+              <FormField
+                control={form.control}
                 name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name </FormLabel>
+                    <FormControl>
+                      <Input placeholder={Val.name} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Sector
-              </label>
-              <input
-                type="text"
-                id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Sector"
-                required
+              <FormField
+                control={form.control}
                 name="sector"
-                defaultValue={EditTableDataValue.sector}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sector</FormLabel>
+                    <FormControl>
+                      <Input placeholder={Val.sector} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          </div>
-          {/* //County Recorders */}
-          <div className="flex justify-between">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Country
-              </label>
-              <input
-                type="text"
-                id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Country"
-                required
+              <FormField
+                control={form.control}
                 name="country"
-                defaultValue={EditTableDataValue.country}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <FormControl>
+                      <Input placeholder={Val.country} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Record year
-              </label>
-              <input
-                type="text"
-                name="recordYear"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="yyyy"
-                defaultValue={EditTableDataValue.recordYear}
-              />
-            </div>
-          </div>
 
-          {/* Add more input fields for other properties */}
-          <section className="flex justify-between  space-x-2">
-            <div className="w-1/3">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Scope 1
-              </label>
-              <input
-                type="number"
-                defaultValue={EditTableDataValue.scope1}
-                id="number-input"
-                aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Scope 1"
-                step="any"
+            <div className="flex space-x-2">
+              {" "}
+              <FormField
+                control={form.control}
                 name="scope1"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scope 1</FormLabel>
+                    <FormControl>
+                      <Input placeholder={Val.scope1} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-
-            <div className="w-1/3">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Scope 2
-              </label>
-              <input
-                type="number"
-                defaultValue={EditTableDataValue.scope2}
-                id="number-input"
-                aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Scope 2"
-                step="any"
+              <FormField
+                control={form.control}
                 name="scope2"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scope 2</FormLabel>
+                    <FormControl>
+                      <Input placeholder={Val.scope2} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="w-1/3">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Scope 3
-              </label>
-              <input
-                type="number"
-                id="number-input"
-                defaultValue={EditTableDataValue.scope3}
-                aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Scope 3"
-                step="any"
+              <FormField
+                control={form.control}
                 name="scope3"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scope 3</FormLabel>
+                    <FormControl>
+                      <Input placeholder={Val.scope3} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="recordYear"
+                render={({ field }) => (
+                  <FormItem className="max-w-xs">
+                    <FormLabel>Record year </FormLabel>
+                    <FormControl>
+                      <Input placeholder="recordyear" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-          </section>
-
-          <div className="flex items-center justify-between space-x-2">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Emission Intensity{" "}
-              </label>
-              <input
-                type="number"
-                id="number-input"
-                aria-describedby="helper-text-explanation"
-                className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="emission_intensity"
-                step="any"
-                name="emission_intensity"
-                defaultValue={EditTableDataValue.emission_intensity}
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Unit
-              </label>
-              <input
-                type="text"
-                id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Emission Intensity unit"
+            <div className="flex items-center text-xs justify-between">
+              {" "}
+              <FormField
+                control={form.control}
                 name="emission_intensity_unit"
-                defaultValue={EditTableDataValue.emission_intensity_unit}
+                render={({ field }) => (
+                  <FormItem className=" flex flex-col ">
+                    <FormLabel>unit</FormLabel>
+                    <FormControl>
+                      <Input className="w-1/2" placeholder="unit" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="emission_intensity"
+                render={({ field }) => (
+                  <FormItem className=" flex flex-col ">
+                    <FormLabel>Emisson Intesity</FormLabel>
+                    <FormControl>
+                      <Input
+                        className=" "
+                        placeholder="Emisson Intesity"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="emission_intensity_derived_by"
+                render={({ field }) => {
+                  return (
+                    <FormItem className="min-w-52">
+                      <FormLabel>Derived by</FormLabel>
+                      <Select onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select " />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Self required ">
+                            Self required{" "}
+                          </SelectItem>
+                          <SelectItem value="Derived">Derived</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
-
-            <div className="w-fit">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Derived By
-              </label>
-              <select
-                name="derived_by"
-                defaultValue={EditTableDataValue.emission_intensity_derived_by}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option value="Self require">Self require</option>
-                <option value="Verified">Verified</option>
-              </select>
-            </div>
-          </div>
-          {/* ??Image uploads */}
-
-          <div className="flex justify-between items-center space-x-2">
-            <div className="w-1/2">
-              <label
-                htmlFor="esg_report"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                ESG Report
-              </label>
-              <div className="relative">
-                <input
-                  id="esg_report"
-                  onChange={EsghandleImage}
-                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                  type="file"
-                  accept=".pdf, .doc, .docx"
-                />
-                <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
-                  <FaFilePdf className="h-6 w-6 mr-1 text-red-500" />
-                  {esgFile ? (
-                    <span className="text-gray-900 dark:text-gray-300">
-                      {esgFile.name}
-                    </span>
-                  ) : (
-                    <span className="text-gray-900 dark:text-gray-300">
-                      Choose file
-                    </span>
+            <div className="flex items-center space-x-2 text-xs">
+              <FormField
+                control={form.control}
+                name="Esg"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Esg</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        // {...field}
+                        name="image"
+                        onChange={EsghandleImage}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="Childlobour"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Childlobour</FormLabel>
+                    <FormControl>
+                      <Input
+                        // {...field}
+                        type="file"
+                        name="image"
+                        onChange={ChildhandleImage}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="space-y-1 mt-3">
+                {" "}
+                <FormField
+                  control={form.control}
+                  name="childLaborFree"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="terms"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <label
+                          htmlFor="terms"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Childlobourfree
+                        </label>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
+                />
+                <FormField
+                  control={form.control}
+                  name="is_msme"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="terms"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <label
+                          htmlFor="msme"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          msme
+                        </label>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
-            <div className="w-1/2">
-              <label
-                htmlFor="child_report"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Child Report
-              </label>
-              <div className="relative">
-                <input
-                  id="child_report"
-                  onChange={ChildhandleImage}
-                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                  type="file"
-                  accept=".pdf, .doc, .docx"
-                />
-                <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
-                  <FaFileWord className="h-6 w-6 mr-1 text-blue-500" />
-                  {childFile ? (
-                    <span className="text-gray-900 dark:text-gray-300">
-                      {childFile.name}
-                    </span>
-                  ) : (
-                    <span className="text-gray-900 dark:text-gray-300">
-                      Choose file
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <div className="flex items-center">
-              <input
-                id="default-checkbox"
-                type="checkbox"
-                defaultChecked
-                name="childLaborFree"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-              <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Child labour free
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                id="default-checkbox"
-                type="checkbox"
-                defaultChecked
-                value=""
-                name="is_msme"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-              <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                MSME
-              </label>
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Save
-          </button>
-        </form>
-      </div>
-    </div>
+            <Button type="submit">Save</Button>
+          </form>
+        </Form>
+      </section>
+    </>
   );
 };
 
-export default EditTable;
+export default Edittable;

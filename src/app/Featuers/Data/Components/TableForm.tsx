@@ -4,6 +4,46 @@ import { useDispatch } from "react-redux";
 import { CreatCarbonAmetionDataAsync } from "../DataSlice";
 import { FaFilePdf, FaFileWord } from "react-icons/fa";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+
+const formSchema = z.object({
+  name: z.string().min(2).max(50),
+  sector: z.string().nonempty(),
+  country: z.string().nonempty(),
+  scope1: z.number(),
+  scope2: z.number().min(0).max(8).optional(),
+  scope3: z.number().min(0).max(8).optional(),
+  recordYear: z.string().min(4).max(4).optional(),
+  emission_intensity_unit: z.string().optional(),
+  emission_intensity: z.number().optional(),
+  emission_intensity_derived_by: z.string().optional(),
+  Esg: z.any().optional(),
+  Childlobour: z.any().optional(),
+  childLaborFree: z.boolean().optional().default(false),
+  is_msme: z.boolean().optional().default(false),
+});
 const CompanyForm = () => {
   const dispatch = useDispatch();
   const [Childlabour, setChildlabour] = useState<any>();
@@ -62,321 +102,291 @@ const CompanyForm = () => {
     // Revoke the previous object URL if it exists
   };
 
-  async function FormInVoice(formData: FormData) {
-    let rawFormData = {
-      // Convert to string and provide empty string as default
-      name: formData.get("name"),
-      sector: formData.get("sector"),
-      country: formData.get("country") || "",
-      scope1: Number(formData.get("scope1")) || 0, // Convert to number and provide 0 as default
-      scope2: Number(formData.get("scope2")) || 0, // Convert to number and provide 0 as default
-      scope3: Number(formData.get("scope3")) || 0, // Convert to number and provide 0 as default
-      emission_intensity: formData.get("emission_intensity") || 0,
-      emission_intensity_unit: formData.get("emission_intensity_unit") || "",
-      emission_intensity_derived_by: formData.get("derived_by") || "",
-      childLaborFree: formData.get("childLaborFree") === "on",
-      recordYear: formData.get("recordYear") || 2023,
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      sector: "",
+      country: "",
+      recordYear: "2023",
+      Childlobour: null,
+      Esg: null,
+      childLaborFree: true,
+      emission_intensity_derived_by: "self required",
+      scope1: 0,
+      scope2: 0,
+      scope3: 0,
+      emission_intensity: 0,
+      is_msme: true,
+      emission_intensity_unit: undefined,
+    },
+  });
 
-      is_msme: formData.get("is_msme") === "on", // For checkbox, check if it's "on"
-    };
-
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    delete values["Childlobour"];
+    delete values["Esg"];
+    console.log(values);
     const PostData = {
-      data: rawFormData,
+      data: values,
       esg_report: Esg || null,
       child_labor_report: Childlabour || null,
       child_labor_File: childFile,
       esg_File: esgFile,
     };
-    console.log(PostData, "Postdata");
+
     dispatch(CreatCarbonAmetionDataAsync(PostData));
   }
 
   return (
-    <div className="max-w-xl mx-auto px-10 py-3 bg-white shadow-md rounded-md">
-      <h2 className="text-xl font-semibold mb-4">Emission form</h2>
-      <div className="max-w-md mx-auto mt-3">
-        <form action={FormInVoice} className="space-y-2">
-          {/* Name and Sector */}
-          <div className="flex justify-between">
-            <div className="w-1/2">
-              <label
-                htmlFor="first_name"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                id="first_name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="TATA MOTORS"
-                required
+    <>
+      <section className="max-w-screen-2xl w-full ">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="flex space-x-2">
+              <FormField
+                control={form.control}
                 name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="w-1/2">
-              <label
-                htmlFor="sector"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Sector
-              </label>
-              <input
-                type="text"
-                id="sector"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Sector"
-                required
+              <FormField
+                control={form.control}
                 name="sector"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sector</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Sector" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          </div>
-
-          {/* Country and Record Year */}
-          <div className="flex justify-between">
-            <div className="w-1/2">
-              <label
-                htmlFor="country"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Country
-              </label>
-              <input
-                type="text"
-                id="country"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Country"
-                required
+              <FormField
+                control={form.control}
                 name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <FormControl>
+                      <Input placeholder="country" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-            <div className="w-1/2">
-              <label
-                htmlFor="record_year"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Record Year
-              </label>
-              <input
-                type="text"
-                id="record_year"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="YYYY"
-                name="record_year"
-              />
-            </div>
-          </div>
 
-          {/* Scope 1, 2, 3 */}
-          <div className="flex justify-between">
-            <div className="w-1/3">
-              <label
-                htmlFor="scope_1"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Scope 1
-              </label>
-              <input
-                type="number"
-                id="scope_1"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Scope 1"
-                step="any"
-                name="scope_1"
+            <div className="flex space-x-2">
+              {" "}
+              <FormField
+                control={form.control}
+                name="scope1"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scope 1</FormLabel>
+                    <FormControl>
+                      <Input placeholder="scope1" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="scope2"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scope 2</FormLabel>
+                    <FormControl>
+                      <Input placeholder="scope2" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="scope3"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scope 3</FormLabel>
+                    <FormControl>
+                      <Input placeholder="scope3" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="recordYear"
+                render={({ field }) => (
+                  <FormItem className="max-w-xs">
+                    <FormLabel>Record year </FormLabel>
+                    <FormControl>
+                      <Input placeholder="recordyear" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-            <div className="w-1/3">
-              <label
-                htmlFor="scope_2"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Scope 2
-              </label>
-              <input
-                type="number"
-                id="scope_2"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Scope 2"
-                step="any"
-                name="scope_2"
-              />
-            </div>
-            <div className="w-1/3">
-              <label
-                htmlFor="scope_3"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Scope 3
-              </label>
-              <input
-                type="number"
-                id="scope_3"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Scope 3"
-                step="any"
-                name="scope_3"
-              />
-            </div>
-          </div>
-
-          {/* Emission Intensity and Unit */}
-          <div className="flex justify-between">
-            <div className="w-1/2">
-              <label
-                htmlFor="emission_intensity"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Emission Intensity
-              </label>
-              <input
-                type="number"
-                id="emission_intensity"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Emission Intensity"
-                step="any"
-                name="emission_intensity"
-              />
-            </div>
-            <div className="w-1/2">
-              <label
-                htmlFor="emission_intensity_unit"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Unit
-              </label>
-              <input
-                type="text"
-                id="emission_intensity_unit"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Emission Intensity unit"
+            <div className="flex items-center text-xs justify-between">
+              {" "}
+              <FormField
+                control={form.control}
                 name="emission_intensity_unit"
+                render={({ field }) => (
+                  <FormItem className=" flex flex-col ">
+                    <FormLabel>unit</FormLabel>
+                    <FormControl>
+                      <Input className="w-1/2" placeholder="unit" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="emission_intensity"
+                render={({ field }) => (
+                  <FormItem className=" flex flex-col ">
+                    <FormLabel>Emisson Intesity</FormLabel>
+                    <FormControl>
+                      <Input
+                        className=" "
+                        placeholder="Emisson Intesity"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="emission_intensity_derived_by"
+                render={({ field }) => {
+                  return (
+                    <FormItem className="min-w-52">
+                      <FormLabel>Derived by</FormLabel>
+                      <Select onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select " />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Self required ">
+                            Self required{" "}
+                          </SelectItem>
+                          <SelectItem value="Derived">Derived</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
-          </div>
-
-          {/* Derived By */}
-          <div className="w-1/2">
-            <label
-              htmlFor="derived_by"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Derived By
-            </label>
-            <select
-              id="derived_by"
-              name="derived_by"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-              <option value="Self require">Self require</option>
-              <option value="Verified">Verified</option>
-            </select>
-          </div>
-
-          {/* Checkboxes */}
-          <div className="flex justify-between">
-            <div className="flex items-center">
-              <input
-                id="child_labor_free"
-                type="checkbox"
-                defaultChecked
-                name="childLaborFree"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            <div className="flex items-center space-x-2 text-xs">
+              <FormField
+                control={form.control}
+                name="Esg"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Esg</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        // {...field}
+                        name="image"
+                        onChange={EsghandleImage}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <label
-                htmlFor="child_labor_free"
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Child labor free
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                id="is_msme"
-                type="checkbox"
-                defaultChecked
-                value=""
-                name="is_msme"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              <FormField
+                control={form.control}
+                name="Childlobour"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Childlobour</FormLabel>
+                    <FormControl>
+                      <Input
+                        // {...field}
+                        type="file"
+                        name="image"
+                        onChange={ChildhandleImage}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <label
-                htmlFor="is_msme"
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                MSME
-              </label>
-            </div>
-          </div>
-
-          {/* File Uploads */}
-          <div className="flex justify-between items-center space-x-2">
-            <div className="w-1/2">
-              <label
-                htmlFor="esg_report"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                ESG Report
-              </label>
-              <div className="relative">
-                <input
-                  id="esg_report"
-                  onChange={EsghandleImage}
-                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                  type="file"
-                />
-                <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
-                  <FaFilePdf className="h-6 w-6 mr-1 text-red-500" />
-                  {esgFile ? (
-                    <span className="text-gray-900 dark:text-gray-300">
-                      {esgFile.name}
-                    </span>
-                  ) : (
-                    <span className="text-gray-900 dark:text-gray-300">
-                      Choose file
-                    </span>
+              <div className="space-y-1 mt-3">
+                {" "}
+                <FormField
+                  control={form.control}
+                  name="childLaborFree"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="terms"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <label
+                          htmlFor="terms"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Childlobourfree
+                        </label>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
+                />
+                <FormField
+                  control={form.control}
+                  name="is_msme"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="terms"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <label
+                          htmlFor="msme"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          msme
+                        </label>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
-            <div className="w-1/2">
-              <label
-                htmlFor="child_report"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Child Report
-              </label>
-              <div className="relative">
-                <input
-                  id="child_report"
-                  onChange={ChildhandleImage}
-                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                  type="file"
-                />
-                <div className="border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:border-gray-600 dark:placeholder-gray-400 p-2 flex items-center justify-center">
-                  <FaFileWord className="h-6 w-6 mr-1 text-blue-500" />
-                  {childFile ? (
-                    <span className="text-gray-900 dark:text-gray-300">
-                      {childFile.name}
-                    </span>
-                  ) : (
-                    <span className="text-gray-900 dark:text-gray-300">
-                      Choose file
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      </section>
+    </>
   );
 };
 

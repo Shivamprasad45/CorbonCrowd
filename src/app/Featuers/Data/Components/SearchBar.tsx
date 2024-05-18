@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { SearchCarbonAmetionDataAsync } from "../DataSlice";
@@ -11,7 +12,7 @@ const SearchBar = () => {
     dispatch(SearchCarbonAmetionDataAsync(data));
   };
   return (
-    <div className="   sm:-ml-0  lg:ml-10 xl:ml-40  w-full  items-start ">
+    <div className=" w-full  items-start ">
       <form className="  pt-6   max-w-sm  ">
         <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
           Search
