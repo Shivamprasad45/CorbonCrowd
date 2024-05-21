@@ -16,7 +16,7 @@ import CompanyForm from "../Featuers/Data/Components/TableForm";
 
 const Drawers = () => {
   return (
-    <MaxWidthRappers className="">
+   
       <Drawer>
         <DrawerTrigger className="bg-black rounded-md p-2">
           {" "}
@@ -24,7 +24,7 @@ const Drawers = () => {
         </DrawerTrigger>
         <DrawerContent className="flex justify-center  items-center">
           <DrawerHeader>
-            <DrawerTitle className="scroll-m-20 text-2xl font-semibold tracking-tight">
+            <DrawerTitle className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
               Emisson form
             </DrawerTitle>
 
@@ -37,7 +37,7 @@ const Drawers = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    </MaxWidthRappers>
+   
   );
 };
 

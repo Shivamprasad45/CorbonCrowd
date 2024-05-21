@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { CreatCarbonAmetionDataAsync } from "../DataSlice";
-import { FaFilePdf, FaFileWord } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,12 +31,21 @@ const formSchema = z.object({
   name: z.string().min(2).max(50),
   sector: z.string().nonempty(),
   country: z.string().nonempty(),
-  scope1: z.number(),
-  scope2: z.number().min(0).max(8).optional(),
-  scope3: z.number().min(0).max(8).optional(),
+  scope1: z.preprocess((val) => parseFloat(val as string), z.number()),
+  scope2: z.preprocess(
+    (val) => parseFloat(val as string),
+    z.number().min(0).max(8).optional()
+  ),
+  scope3: z.preprocess(
+    (val) => parseFloat(val as string),
+    z.number().min(0).max(8).optional()
+  ),
   recordYear: z.string().min(4).max(4).optional(),
   emission_intensity_unit: z.string().optional(),
-  emission_intensity: z.number().optional(),
+  emission_intensity: z.preprocess(
+    (val) => parseFloat(val as string),
+    z.number().optional()
+  ),
   emission_intensity_derived_by: z.string().optional(),
   Esg: z.any().optional(),
   Childlobour: z.any().optional(),
@@ -139,9 +147,12 @@ const CompanyForm = () => {
 
   return (
     <>
-      <section className="max-w-screen-2xl w-full ">
+      <section className="max-w-md w-full  bg-transparent  flex justify-center items-center">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 items-center"
+          >
             <div className="flex space-x-2">
               <FormField
                 control={form.control}
@@ -193,7 +204,12 @@ const CompanyForm = () => {
                   <FormItem>
                     <FormLabel>Scope 1</FormLabel>
                     <FormControl>
-                      <Input placeholder="scope1" {...field} />
+                      <Input
+                        placeholder="scope1"
+                        type="number"
+                        step="any"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -206,7 +222,12 @@ const CompanyForm = () => {
                   <FormItem>
                     <FormLabel>Scope 2</FormLabel>
                     <FormControl>
-                      <Input placeholder="scope2" {...field} />
+                      <Input
+                        placeholder="scope2"
+                        type="number"
+                        step="any"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,7 +240,12 @@ const CompanyForm = () => {
                   <FormItem>
                     <FormLabel>Scope 3</FormLabel>
                     <FormControl>
-                      <Input placeholder="scope3" {...field} />
+                      <Input
+                        placeholder="scope3"
+                        type="number"
+                        step="any"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -243,19 +269,6 @@ const CompanyForm = () => {
               {" "}
               <FormField
                 control={form.control}
-                name="emission_intensity_unit"
-                render={({ field }) => (
-                  <FormItem className=" flex flex-col ">
-                    <FormLabel>unit</FormLabel>
-                    <FormControl>
-                      <Input className="w-1/2" placeholder="unit" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="emission_intensity"
                 render={({ field }) => (
                   <FormItem className=" flex flex-col ">
@@ -266,6 +279,19 @@ const CompanyForm = () => {
                         placeholder="Emisson Intesity"
                         {...field}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="emission_intensity_unit"
+                render={({ field }) => (
+                  <FormItem className="  ">
+                    <FormLabel>unit</FormLabel>
+                    <FormControl>
+                      <Input className="" placeholder="unit" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -324,7 +350,6 @@ const CompanyForm = () => {
                     <FormLabel>Childlobour</FormLabel>
                     <FormControl>
                       <Input
-                        // {...field}
                         type="file"
                         name="image"
                         onChange={ChildhandleImage}

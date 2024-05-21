@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { CreatCarbonAmetionDataAsync } from "../DataSlice";
-import { FaFilePdf, FaFileWord } from "react-icons/fa";
+
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -246,19 +245,6 @@ const Edittable = (EditTableDataValue: z.infer<typeof formSchema>) => {
               {" "}
               <FormField
                 control={form.control}
-                name="emission_intensity_unit"
-                render={({ field }) => (
-                  <FormItem className=" flex flex-col ">
-                    <FormLabel>unit</FormLabel>
-                    <FormControl>
-                      <Input className="w-1/2" placeholder="unit" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="emission_intensity"
                 render={({ field }) => (
                   <FormItem className=" flex flex-col ">
@@ -269,6 +255,19 @@ const Edittable = (EditTableDataValue: z.infer<typeof formSchema>) => {
                         placeholder="Emisson Intesity"
                         {...field}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="emission_intensity_unit"
+                render={({ field }) => (
+                  <FormItem className=" ">
+                    <FormLabel>unit</FormLabel>
+                    <FormControl>
+                      <Input className="" placeholder="unit" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -6,7 +6,7 @@ import {
   ItemSelector,
   PageCarbonAmetionDataAsync,
 } from "../DataSlice";
-
+import { Button } from "@/components/ui/button";
 const Tabelpagination = () => {
   const dispatch = useDispatch();
   const Endpage = useSelector(ItemError);
@@ -19,14 +19,12 @@ const Tabelpagination = () => {
     const nextPage = page + 1;
     dispatch(PageCarbonAmetionDataAsync({ offset: nextPage, limit: limit }));
     setPage(nextPage);
-    console.log("next");
   };
 
   const PrevPaginationLog = () => {
     const prevPage = page - 1;
     dispatch(PageCarbonAmetionDataAsync({ offset: prevPage, limit: limit }));
     setPage(prevPage);
-    console.log("prev");
   };
 
   const startRange = page * limit + 1;
@@ -53,20 +51,18 @@ const Tabelpagination = () => {
         </span>
         {/* Buttons */}
         <div className="inline-flex mt-2 xs:mt-0">
-          <button
-            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          <Button
             onClick={PrevPaginationLog}
             disabled={page === 0} // Disable prev button on first page
           >
             Prev
-          </button>
-          <button
-            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          </Button>
+          <Button
             onClick={NextPaginationLog}
             disabled={DataTabel.length < 10 || Endpage === "dataEnd"} // Disable next button on last page
           >
             Next
-          </button>
+          </Button>
         </div>
       </div>
     </div>

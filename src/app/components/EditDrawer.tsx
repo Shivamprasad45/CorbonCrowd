@@ -68,26 +68,24 @@ export function DrawerDialogDemo(EditTableDataValue: {
   }
 
   return (
-    <MaxWidthRappers className="">
-      <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger asChild>
-          <Button variant="default">Dispute</Button>
-        </DrawerTrigger>
-        <DrawerContent className=" items-center flex justify-center">
-          <DrawerHeader className="text-left">
-            <DrawerTitle>Emission form update</DrawerTitle>
-            <Edittable
-              EditTableDataValue={EditTableDataValue["EditTableDataValue"]}
-            />
-          </DrawerHeader>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <Button variant="default">Dispute</Button>
+      </DrawerTrigger>
+      <DrawerContent className=" items-center flex justify-center">
+        <DrawerHeader className="text-left">
+          <DrawerTitle>Emission form update</DrawerTitle>
+          <Edittable
+            EditTableDataValue={EditTableDataValue["EditTableDataValue"]}
+          />
+        </DrawerHeader>
 
-          <DrawerFooter className="pt-2">
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </MaxWidthRappers>
+        <DrawerFooter className="pt-2">
+          <DrawerClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }

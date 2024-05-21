@@ -110,7 +110,6 @@ export const PageCarbonAmetionDataAsync = createAsyncThunk(
       const response = await PageNationCarbonAmetionDataApi(page);
       return response;
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }
@@ -173,6 +172,7 @@ const ItemSlice = createSlice({
         PageCarbonAmetionDataAsync.fulfilled,
         (state, action: PayloadAction<CompanyData[]>) => {
           state.CarbonAmetion = action.payload;
+          state.status = "succeeded";
           state.error = " ";
         }
       )
@@ -190,5 +190,6 @@ export const ItemSelector = (state: { ItemReduce: State }) =>
   state.ItemReduce.CarbonAmetion;
 export const ItemError = (state: { ItemReduce: State }) =>
   state.ItemReduce.error;
-
+export const ItemStatus = (state: { ItemReduce: State }) =>
+  state.ItemReduce.status;
 export const { SortActios } = ItemSlice.actions;
