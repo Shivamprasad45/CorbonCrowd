@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { SearchCarbonAmetionDataAsync } from "../DataSlice";
 
 import { IoIosSearch } from "react-icons/io";
+import { Input } from "@/components/ui/input";
 
 const SearchBar = () => {
   const dispatch = useDispatch();
@@ -13,16 +14,16 @@ const SearchBar = () => {
   };
 
   return (
-    <div className=" w-full pt-4  items-start ">
+    <div className="w-full py-4 items-center flex justify-between">
+      <div className="scroll-m-20 text-4xl font-semibold tracking-tight">
+        Esg Report
+      </div>
       <form className="flex flex-col items-start justify-center gap-2">
-        <div className="relative flex items-center bg-gray-100 rounded-lg dark:bg-gray-800">
-          <IoIosSearch size={40} />
-          <input
-            id="search"
+        <div className="relative flex items-center">
+          <Input
+            className="rounded-r-full rounded-l-full"
             type="search"
-            className="w-full px-10 py-3 text-sm text-gray-700 bg-transparent focus:outline-none  rounded-lg dark:text-gray-200 dark:placeholder-gray-400"
-            placeholder="Search company"
-            required
+            placeholder="Search"
             onChange={handleSearch}
           />
         </div>

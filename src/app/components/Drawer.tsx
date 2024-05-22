@@ -11,24 +11,25 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
-import MaxWidthRappers from "./MaxWidthRapper";
 import CompanyForm from "../Featuers/Data/Components/TableForm";
 
 const Drawers = () => {
   return (
-   
+    <div className="">
       <Drawer>
         <DrawerTrigger className="bg-black rounded-md p-2">
           {" "}
           <PlusIcon className="w-6 h-6 stroke-white" />
         </DrawerTrigger>
-        <DrawerContent className="flex justify-center  items-center">
+
+        <DrawerContent className="  w-full flex max-w-xl ">
           <DrawerHeader>
-            <DrawerTitle className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
+            <DrawerTitle className="scroll-m-20 text-2xl font-semibold tracking-tight  text-center">
               Emisson form
             </DrawerTitle>
-
-            <CompanyForm />
+            <div className=" items-center flex justify-center ">
+              <CompanyForm />
+            </div>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
@@ -37,7 +38,7 @@ const Drawers = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-   
+    </div>
   );
 };
 

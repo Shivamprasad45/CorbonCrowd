@@ -278,15 +278,14 @@ const Tabel = () => {
                 </div>
               </th>
               <th className="border px-4 py-2 text-left font-bold">Country</th>
-              <th className="border px-4 py-2 text-left font-bold">
-                Emission Intensity Unit
-              </th>
+
               <th className="border px-4 py-2 text-left font-bold">
                 Emission Intensity
               </th>
+              <th className="border px-4 py-2 text-left font-bold">Unit</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="">
             {DataTabel &&
               DataTabel.map((company, Index: number) => (
                 <>
@@ -324,11 +323,12 @@ const Tabel = () => {
                     <td className="border px-4 py-2 text-left text-xs md:text-sm">
                       {company.country}
                     </td>
-                    <td className="border px-4 py-2 text-left text-xs md:text-sm">
-                      {company.emission_intensity_unit}
-                    </td>
+
                     <td className="border px-4 py-2 text-left text-xs md:text-sm">
                       {company.emission_intensity}
+                    </td>
+                    <td className="border px-4 py-2 text-left text-xs md:text-sm">
+                      {company.emission_intensity_unit}
                     </td>
                   </tr>
                   {Open === Index && (
@@ -337,50 +337,55 @@ const Tabel = () => {
                         colSpan={8}
                         className="border px-4 py-2 text-left text-xs md:text-sm"
                       >
-                        <MaxWidthRappers className="w-full space-y-3">
-                          <div className="flex justify-between items-center w-full">
-                            <div className="text-center w-1/3 m-2">
-                              <h1 className="font-bold">Childlaborfree</h1>
-                              <p>{company.childLaborFree ? "Yes" : "No"}</p>
-                            </div>
-                            <div className="text-center w-1/3 m-2">
-                              <h1 className="font-bold">Msme</h1>
-                              <p>{company.is_msme ? "yes" : "no"}</p>
-                            </div>
-                            <div className="text-center w-1/3 m-2">
-                              <h1 className="font-bold">Drivide by</h1>
-                              <p>{company.emission_intensity_derived_by}</p>
-                            </div>
-                          </div>
-                          <div className="flex justify-between items-center w-full">
-                            <div className="text-center w-1/3 m-2">
-                              <div
-                                className="items-center text-center flex flex-col cursor-pointer"
-                                onClick={() =>
-                                  ImageOpen(
-                                    "https://media.istockphoto.com/id/1178808605/photo/paper.jpg?s=1024x1024&w=is&k=20&c=qJoOGtTgWMvxUNfvK4dLX5rLKZ3Z8PEYv0mbxfwFZZA="
-                                  )
-                                }
-                              >
-                                <RiExternalLinkLine size={20} />
-                                <span>ESG report</span>
+                        <MaxWidthRappers className="w-full    space-y-3">
+                          <div className=" items-center flex flex-col justify-center">
+                            {" "}
+                            <div className="flex justify-between items-center w-full">
+                              <div className="flex items-center space-x-2   m-2">
+                                <h1 className="font-bold">Childlaborfree</h1>
+                                <p>{company.childLaborFree ? "Yes" : "No"}</p>
+                              </div>
+                              <div className="flex items-center space-x-2 m-2">
+                                <h1 className="font-bold">Msme</h1>
+                                <p>{company.is_msme ? "yes" : "no"}</p>
+                              </div>
+                              <div className="flex items-end text-end space-x-2  m-2">
+                                <h1 className="font-bold">Drivide By</h1>
+                                <p>{company.emission_intensity_derived_by}</p>
                               </div>
                             </div>
-                            <div className="text-center w-1/3 m-2">
-                              <div
-                                className="items-center text-center flex flex-col cursor-pointer"
-                                onClick={() =>
-                                  ImageOpen(
-                                    "https://media.istockphoto.com/id/1178808605/photo/paper.jpg?s=1024x1024&w=is&k=20&c=qJoOGtTgWMvxUNfvK4dLX5rLKZ3Z8PEYv0mbxfwFZZA="
-                                  )
-                                }
-                              >
-                                <RiExternalLinkLine size={20} />
-                                <span>Child labour report</span>
+                            <div className="flex justify-between items-center w-full">
+                              <div className="text-center   m-2">
+                                <div
+                                  className="items-center text-center flex space-x-2 cursor-pointer"
+                                  onClick={() =>
+                                    ImageOpen(
+                                      "https://media.istockphoto.com/id/1178808605/photo/paper.jpg?s=1024x1024&w=is&k=20&c=qJoOGtTgWMvxUNfvK4dLX5rLKZ3Z8PEYv0mbxfwFZZA="
+                                    )
+                                  }
+                                >
+                                  <RiExternalLinkLine size={20} />
+                                  <span>ESG report</span>
+                                </div>
                               </div>
-                            </div>
-                            <div className="text-center w-1/3 m-2">
-                              <DrawerDialogDemo EditTableDataValue={company} />
+                              <div className="text-center   m-2">
+                                <div
+                                  className="items-center text-center flex space-x-2  cursor-pointer"
+                                  onClick={() =>
+                                    ImageOpen(
+                                      "https://media.istockphoto.com/id/1178808605/photo/paper.jpg?s=1024x1024&w=is&k=20&c=qJoOGtTgWMvxUNfvK4dLX5rLKZ3Z8PEYv0mbxfwFZZA="
+                                    )
+                                  }
+                                >
+                                  <RiExternalLinkLine size={20} />
+                                  <span>Child labour report</span>
+                                </div>
+                              </div>
+                              <div className="text-end   m-2">
+                                <DrawerDialogDemo
+                                  EditTableDataValue={company}
+                                />
+                              </div>
                             </div>
                           </div>
                         </MaxWidthRappers>
@@ -392,8 +397,7 @@ const Tabel = () => {
           </tbody>
         </table>
         <div className="flex justify-between pt-2 md:pt-4 items-center">
-          <Tabelpagination />
-          <Drawers />
+          <Tabelpagination /> <Drawers />
         </div>
       </MaxWidthRappers>
     </>
