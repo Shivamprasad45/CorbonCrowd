@@ -181,7 +181,7 @@ const Tabel = () => {
                 </th>
               </tr>
             )}
-            <tr className="m-0 border-t p-0 even:bg-muted bg-gray-200 md:text-sm text-xs space-x-4">
+            <tr className="m-0 border-t p-0 even:bg-muted  md:text-sm text-xs space-x-4">
               <th className="border px-4 py-2 text-left font-bold">Name</th>
               <th className="border px-4 py-2 text-left font-bold">Sector</th>
               <th className="border px-4 py-2 text-left font-bold">
@@ -332,7 +332,7 @@ const Tabel = () => {
                     </td>
                   </tr>
                   {Open === Index && (
-                    <tr className="bg-gray-50">
+                    <tr className="">
                       <td
                         colSpan={8}
                         className="border px-4 py-2 text-left text-xs md:text-sm"

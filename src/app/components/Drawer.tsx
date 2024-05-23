@@ -17,7 +17,7 @@ const Drawers = () => {
   return (
     <div className="">
       <Drawer>
-        <DrawerTrigger className="bg-black rounded-md p-2">
+        <DrawerTrigger className="rounded-md bg-black p-2 ">
           {" "}
           <PlusIcon className="w-6 h-6 stroke-white" />
         </DrawerTrigger>

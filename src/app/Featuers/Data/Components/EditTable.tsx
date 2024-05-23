@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -143,7 +142,10 @@ const Edittable = (EditTableDataValue: z.infer<typeof formSchema>) => {
     <>
       <section className="max-w-screen-2xl w-full ">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 items-center flex flex-col "
+          >
             <div className="flex space-x-2">
               <FormField
                 control={form.control}
@@ -336,7 +338,7 @@ const Edittable = (EditTableDataValue: z.infer<typeof formSchema>) => {
                   </FormItem>
                 )}
               />
-              <div className="space-y-1 mt-3">
+              <div className="space-y-1  mt-5">
                 {" "}
                 <FormField
                   control={form.control}
@@ -384,7 +386,9 @@ const Edittable = (EditTableDataValue: z.infer<typeof formSchema>) => {
                 />
               </div>
             </div>
-            <Button type="submit">Save</Button>
+            <Button size={"lg"} type="submit">
+              Save
+            </Button>
           </form>
         </Form>
       </section>

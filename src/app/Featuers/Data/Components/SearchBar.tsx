@@ -2,7 +2,6 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { SearchCarbonAmetionDataAsync } from "../DataSlice";
 
-import { IoIosSearch } from "react-icons/io";
 import { Input } from "@/components/ui/input";
 
 const SearchBar = () => {
@@ -15,7 +14,7 @@ const SearchBar = () => {
 
   return (
     <div className="w-full py-4 items-center flex justify-between">
-      <div className="scroll-m-20 text-4xl font-semibold tracking-tight">
+      <div className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
         Esg Report
       </div>
       <form className="flex flex-col items-start justify-center gap-2">

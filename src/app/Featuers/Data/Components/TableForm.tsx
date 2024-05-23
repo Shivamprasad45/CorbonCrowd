@@ -151,7 +151,7 @@ const CompanyForm = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 items-center"
+            className="space-y-8 flex flex-col justify-center items-center"
           >
             <div className="flex space-x-2">
               <FormField

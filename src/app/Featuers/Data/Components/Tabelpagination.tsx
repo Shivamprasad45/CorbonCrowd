@@ -50,7 +50,7 @@ const Tabelpagination = () => {
           Entries
         </span>
         {/* Buttons */}
-        <div className="inline-flex mt-2 xs:mt-0">
+        <div className="inline-flex space-x-3 mt-2 xs:mt-0">
           <Button
             onClick={PrevPaginationLog}
             disabled={page === 0} // Disable prev button on first page
